@@ -9,16 +9,32 @@ Both deployments run the same frozen source, SHA-256 `e21aa2fe1e5cf42f2e4c68ae90
 
 ## Project run (address `0xAa76b8A17086938eF9474150f272bfEaC76d216F`, through this app)
 
-Deploy tx: NOT RECORDED YET. Every row below: NOT RUN.
+Run date 2026-10-06, app at https://no-bait.vercel.app, MetaMask on StudioNet. Deploy tx [`0xfb61824e…617b0958`](https://explorer-studio.genlayer.com/tx/0xfb61824ea8771039b020fda8b1e3171155e3d8cbe9ac84cbcc2287c0617b0958). **11 transactions**, all FINALIZED.
 
-| # | Wallet | Action in the app | Expected | Tx hash | Result |
+Wallets: **A** = author `0x6276095FAEA15108740445ff277fdA8c304657F4` · **B** = challenger `0x037f58E33c1Ec8fdA272361E0aAC1e31054a1CDE`. Every bond is 0.01 GEN, entered in the app.
+
+| # | Wallet | Action in the app | Expected | Tx hash | Result (read back by the app from the accepted state) |
 |---|---|---|---|---|---|
-| P1 | A (author) | Publish O1 | piece OPEN, bond held | NOT RUN | — |
-| P2 | A | Publish W1 (same summary) | piece OPEN | NOT RUN | — |
-| P3 | B | Challenge P1 | OVERCLAIMS; B credits +2 bonds | NOT RUN | — |
-| P4 | B | Challenge P2 | WITHIN; A credits +2 bonds | NOT RUN | — |
-| P5 | A | Challenge button while connected as the author | disabled: *The author cannot challenge their own piece* (not sent) | — | NOT RUN |
-| P6 | A, B | Withdraw | GEN reaches both wallets; credits 0 | NOT RUN | — |
+| P1 | A | Publish O1 and W1: summary `In mice, the compound slowed tumour growth by a third.` under `Compound slows tumour growth by a third` and under `Compound slows tumour growth in mice` | two OPEN pieces, ids shown before signing | [`0x3dfe8dfe…4ea1abd4`](https://explorer-studio.genlayer.com/tx/0x3dfe8dfe4e65f165f17f456edb8678b35e808ab01e34dd5dda6a6cb74ea1abd4) · [`0x3bbb16b9…c98a4851`](https://explorer-studio.genlayer.com/tx/0x3bbb16b9d2c60ab8f54f6f7d3a40bfb8cd1bdfe24be746803b69e5c2c98a4851) | SUCCESS; both OPEN, 0.01 GEN held each (`9ee4ab45…316324`, `1dd6fdf7…183d79`) |
+| P2 | B | Challenge "…in mice" | WITHIN | [`0x8acfc08e…7efc01ff`](https://explorer-studio.genlayer.com/tx/0x8acfc08e653d152af810b547411a9321ea97ace13e2e2e4504520fbd7efc01ff) | **WITHIN** — "author took both bonds", held 0 |
+| P3 | B | Challenge "…by a third" | OVERCLAIMS | [`0x50b19ce4…fc77e522`](https://explorer-studio.genlayer.com/tx/0x50b19ce48dd5c1ed46a61872bfb5ddaeebf661ceca82a98a999f8bdbfc77e522) | **OVERCLAIMS** — "Both bonds (0.02 GEN) are now your credits" |
+| P4 | A | Publish `Bakery opens a second shop` over `The bakery opened a second shop on Market Street this week.` | OPEN | [`0xe7d50b39…4836f8fb`](https://explorer-studio.genlayer.com/tx/0xe7d50b39898e4d24e0e0b2a21566c40a0aacf56733390f621c453e904836f8fb) | SUCCESS; OPEN |
+| P5 | A | Challenge button on that open piece | disabled with *The author cannot challenge their own piece* | — (not sent) | disabled with that sentence (screenshot 2) |
+| P6 | B | Challenge the bakery piece (extra ruling) | — | [`0x3df95afd…6f24ad74`](https://explorer-studio.genlayer.com/tx/0x3df95afd61267212094571f1e42119f12859c33425353095fab63b846f24ad74) | **WITHIN** — author took both bonds |
+| P7 | A | Withdraw | A credits 0.04 GEN → 0 | [`0x594708fd…eda0faf0`](https://explorer-studio.genlayer.com/tx/0x594708fdd3d3032a70134764b1b2e361aa158a3b74377f8c455bcea9eda0faf0) | SUCCESS; "0.04 GEN sent to your wallet; your credits now read 0 GEN". Native transfer [`0x8f8f7c04…ecaa82b1`](https://explorer-studio.genlayer.com/tx/0x8f8f7c0491475975551b72f997cfdc3470b0e4db93652d10470ab4c7ecaa82b1) |
+| P8 | B | Withdraw | B credits 0.02 GEN → 0 | [`0x67815a7a…92f716ff`](https://explorer-studio.genlayer.com/tx/0x67815a7aeb5e7583422285acc441d32bb656477536e6df2194f15ee592f716ff) | SUCCESS; "0.02 GEN sent to your wallet; your credits now read 0 GEN". Native transfer [`0x942bc04d…e1778edd`](https://explorer-studio.genlayer.com/tx/0x942bc04d4de3083d29bddea2141c6df3eaebd633efbb595f7653b3b4e1778edd) |
+
+Accounting: A bonded 0.03 GEN and took back 0.04 (two WITHIN rulings at 0.02 each); B bonded 0.03 GEN and took back 0.02 (one OVERCLAIMS). 0.06 in, 0.06 out.
+
+Screenshots:
+
+![Same summary, two headlines: one stamped OVERCLAIMS, one WITHIN](docs/evidence/1-same-summary-two-stamps.png)
+
+![Author connected: Challenge disabled with the contract's sentence](docs/evidence/2-author-challenge-disabled.png)
+
+![Author's credits after withdrawing, with the withdrawal tx in the runtime bar](docs/evidence/3-author-withdrew.png)
+
+Also: `docs/evidence/2b-third-piece-within.png` (the bakery piece ruled WITHIN) and `docs/evidence/3b-challenger-withdrew.png`.
 
 Predictable reverts (author challenge, second challenge) are **not sent** from the app: the disabled button with the
 contract's sentence, or the closed stamp, is the evidence.

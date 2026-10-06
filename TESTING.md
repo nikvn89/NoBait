@@ -54,8 +54,13 @@ and is refused by the RPC. The publish form shows a live byte meter and disables
 
 ## On-chain runs
 
-See `RUNTIME_EVIDENCE.md`: the Intelligent Contract run (18 transactions, every must-verify row PASS) and the Project
-run through this app.
+See `RUNTIME_EVIDENCE.md`: the Project run through this app (11 transactions) and the Intelligent Contract run
+(18 transactions, every must-verify row PASS), one hash per row.
+
+Project run through the app: over one summary, "…by a third" was ruled **OVERCLAIMS** (both bonds to the challenger) and
+"…in mice" **WITHIN** (both to the author); the author's Challenge button was disabled with the contract's sentence; a
+third piece was ruled WITHIN; both wallets withdrew and their credits read 0. Every result was reported by the app only
+after it re-read the accepted state: **PASS**.
 
 ## Consensus behaviour
 

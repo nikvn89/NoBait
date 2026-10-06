@@ -15,6 +15,7 @@ when a challenge is ruled.
 | Contract source | `contracts/HeadlineBound.py` (SHA-256 in `SOURCE_SHA256.txt`) |
 | Project deployment | [`0xAa76b8A17086938eF9474150f272bfEaC76d216F`](https://explorer-studio.genlayer.com/address/0xAa76b8A17086938eF9474150f272bfEaC76d216F) |
 | Intelligent Contract | HeadlineBound — the same frozen source, deployed separately at [`0x34149cE0A6cCd7728E94A1898674e60475a716bc`](https://explorer-studio.genlayer.com/address/0x34149cE0A6cCd7728E94A1898674e60475a716bc) |
+| Live app | https://no-bait.vercel.app |
 | Evidence | `RUNTIME_EVIDENCE.md` (one tx hash per row) · `TESTING.md` |
 
 ## What it does
@@ -31,8 +32,10 @@ claim more than the summary supports?
 
 On StudioNet, over the summary `In mice, the compound slowed tumour growth by a third.`, the headline
 `Compound slows tumour growth by a third` was ruled **OVERCLAIMS** and `Compound slows tumour growth in mice` **WITHIN** —
-same challenger, same bond, opposite payouts. Under one headline, `Council closes the library on Sundays`, a council that
+same challenger, same bond, opposite payouts, both in the contract run and through this app. Under one headline, `Council closes the library on Sundays`, a council that
 *discussed* closing it was OVERCLAIMS and a council that *voted* to close it was WITHIN.
+
+![Same summary, two headlines, two stamps](docs/evidence/1-same-summary-two-stamps.png)
 
 While a piece is still open, its author can retire it and take the bond back. The author cannot challenge their own piece.
 
