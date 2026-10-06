@@ -1,0 +1,59 @@
+{
+  "author": "0x3065e31b1d993d7c0d59e6786844cba56780b2d3",
+  "pieces": [
+    {
+      "headline": "Compound slows tumour growth by a third",
+      "summary": "In mice, the compound slowed tumour growth by a third.",
+      "normalized_headline": "Compound slows tumour growth by a third",
+      "normalized_summary": "In mice, the compound slowed tumour growth by a third.",
+      "h_len": 39,
+      "s_len": 54,
+      "piece_id": "60ab49c984b874f70befe959f579552e72429f833562578f9758b5288a0cc3ca"
+    },
+    {
+      "headline": "Compound slows tumour growth in mice",
+      "summary": "In mice, the compound slowed tumour growth by a third.",
+      "normalized_headline": "Compound slows tumour growth in mice",
+      "normalized_summary": "In mice, the compound slowed tumour growth by a third.",
+      "h_len": 36,
+      "s_len": 54,
+      "piece_id": "9c68c24020bda7bbba2f9999bc65fe1bf9a7822bc962d910e7c20169a265c8b8"
+    },
+    {
+      "headline": "  Council closes\tthe library\n on Sundays  ",
+      "summary": "The council voted to close the library on Sundays.",
+      "normalized_headline": "Council closes the library on Sundays",
+      "normalized_summary": "The council voted to close the library on Sundays.",
+      "h_len": 37,
+      "s_len": 50,
+      "piece_id": "7661ba3af85d54a09609574360d95c69d021e1c9061d2f219247474ec6c81fb4"
+    },
+    {
+      "headline": "\u001cBakery opens a second shop\u001f",
+      "summary": "The bakery openeda second shop on Market Street this week.",
+      "normalized_headline": "Bakery opens a second shop",
+      "normalized_summary": "The bakery opened a second shop on Market Street this week.",
+      "h_len": 26,
+      "s_len": 59,
+      "piece_id": "1e624f0bdc58b562c4e75d97ae5bea5458b5ffd7c6ff151dc6f75b0dbffbd9eb"
+    },
+    {
+      "headline": "﻿Headline with a byte order mark",
+      "summary": "Summary\u001dwith\u001egroup separators.",
+      "normalized_headline": "﻿Headline with a byte order mark",
+      "normalized_summary": "Summary with group separators.",
+      "h_len": 32,
+      "s_len": 30,
+      "piece_id": "4f7c14ee2970f8dba32d2303e9ec372553c5890c1b784c9e4a2edb3c24764751"
+    },
+    {
+      "headline": "Mairie : la bibliothèque ferme le dimanche",
+      "summary": "Le conseil a voté　la fermeture le dimanche. 📰",
+      "normalized_headline": "Mairie : la bibliothèque ferme le dimanche",
+      "normalized_summary": "Le conseil a voté la fermeture le dimanche. 📰",
+      "h_len": 42,
+      "s_len": 45,
+      "piece_id": "4090fb27e2134f097f130e2e682c02b1a22c5b492a61d78cf69f2f7daa4d6b07"
+    }
+  ]
+}

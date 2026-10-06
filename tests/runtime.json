@@ -1,0 +1,277 @@
+{
+ "contract": "HeadlineBound",
+ "wallets": {
+  "A": "author",
+  "B": "challenger"
+ },
+ "methods": {
+  "publish": [
+   "headline",
+   "summary"
+  ],
+  "challenge": [
+   "piece_id"
+  ],
+  "retire": [
+   "piece_id"
+  ],
+  "withdraw": [],
+  "get_piece": [
+   "piece_id"
+  ],
+  "get_credits": [
+   "wallet"
+  ]
+ },
+ "rows": [
+  {
+   "n": 1,
+   "wallet": "A",
+   "method": "publish",
+   "args": [
+    "Compound slows tumour growth by a third",
+    "In mice, the compound slowed tumour growth by a third."
+   ],
+   "value": 2000000000000000,
+   "save": {
+    "name": "P1",
+    "payload": [
+     "L:HEADLINE_BOUND:PIECE:V1|",
+     "sender",
+     "L:|",
+     "len(norm(A0))",
+     "L:|",
+     "norm(A0)",
+     "L:|",
+     "len(norm(A1))",
+     "L:|",
+     "norm(A1)"
+    ]
+   },
+   "expect": "P1 OPEN, bond 2000000000000000 wei"
+  },
+  {
+   "n": 2,
+   "wallet": "A",
+   "method": "publish",
+   "args": [
+    "Compound slows tumour growth in mice",
+    "In mice, the compound slowed tumour growth by a third."
+   ],
+   "value": 2000000000000000,
+   "save": {
+    "name": "P2",
+    "payload": [
+     "L:HEADLINE_BOUND:PIECE:V1|",
+     "sender",
+     "L:|",
+     "len(norm(A0))",
+     "L:|",
+     "norm(A0)",
+     "L:|",
+     "len(norm(A1))",
+     "L:|",
+     "norm(A1)"
+    ]
+   },
+   "expect": "P2 OPEN (same summary as P1)"
+  },
+  {
+   "n": 3,
+   "wallet": "B",
+   "method": "challenge",
+   "args": [
+    "$P1"
+   ],
+   "value": 2000000000000000,
+   "expect": "OVERCLAIMS; P1 RULED_OVERCLAIMS; B credits 4000000000000000"
+  },
+  {
+   "n": 4,
+   "wallet": "B",
+   "method": "challenge",
+   "args": [
+    "$P2"
+   ],
+   "value": 2000000000000000,
+   "expect": "WITHIN; P2 RULED_WITHIN; A credits 4000000000000000, B stays 4000000000000000"
+  },
+  {
+   "n": 5,
+   "wallet": "B",
+   "method": "challenge",
+   "args": [
+    "$P1"
+   ],
+   "revert": "This piece is no longer open to challenge",
+   "expect": "revert *This piece is no longer open to challenge*"
+  },
+  {
+   "n": 6,
+   "wallet": "A",
+   "method": "publish",
+   "args": [
+    "Council closes the library on Sundays",
+    "The council discussed closing the library on Sundays."
+   ],
+   "value": 2000000000000000,
+   "save": {
+    "name": "P3",
+    "payload": [
+     "L:HEADLINE_BOUND:PIECE:V1|",
+     "sender",
+     "L:|",
+     "len(norm(A0))",
+     "L:|",
+     "norm(A0)",
+     "L:|",
+     "len(norm(A1))",
+     "L:|",
+     "norm(A1)"
+    ]
+   },
+   "expect": "P3 OPEN"
+  },
+  {
+   "n": 7,
+   "wallet": "A",
+   "method": "challenge",
+   "args": [
+    "$P3"
+   ],
+   "revert": "The author cannot challenge their own piece",
+   "expect": "revert *The author cannot challenge their own piece*"
+  },
+  {
+   "n": 8,
+   "wallet": "B",
+   "method": "challenge",
+   "args": [
+    "$P3"
+   ],
+   "value": 1000000000000000,
+   "revert": "The challenge bond must equal the author's bond",
+   "expect": "revert *The challenge bond must equal the author's bond*"
+  },
+  {
+   "n": 9,
+   "wallet": "B",
+   "method": "challenge",
+   "args": [
+    "$P3"
+   ],
+   "value": 2000000000000000,
+   "expect": "OVERCLAIMS; P3 RULED_OVERCLAIMS; B credits 8000000000000000"
+  },
+  {
+   "n": 10,
+   "calls": [
+    {
+     "wallet": "A",
+     "method": "publish",
+     "args": [
+      "Council closes the library on Sundays",
+      "The council voted to close the library on Sundays."
+     ],
+     "value": 2000000000000000,
+     "save": {
+      "name": "P4",
+      "payload": [
+       "L:HEADLINE_BOUND:PIECE:V1|",
+       "sender",
+       "L:|",
+       "len(norm(A0))",
+       "L:|",
+       "norm(A0)",
+       "L:|",
+       "len(norm(A1))",
+       "L:|",
+       "norm(A1)"
+      ]
+     }
+    },
+    {
+     "wallet": "B",
+     "method": "challenge",
+     "args": [
+      "$P4"
+     ],
+     "value": 2000000000000000
+    }
+   ],
+   "expect": "WITHIN on the same headline as P3; P4 RULED_WITHIN; A credits 8000000000000000 (2 transactions)"
+  },
+  {
+   "n": 11,
+   "calls": [
+    {
+     "wallet": "A",
+     "method": "publish",
+     "args": [
+      "Bakery opens a second shop",
+      "The bakery opened a second shop on Market Street this week."
+     ],
+     "value": 2000000000000000,
+     "save": {
+      "name": "P5",
+      "payload": [
+       "L:HEADLINE_BOUND:PIECE:V1|",
+       "sender",
+       "L:|",
+       "len(norm(A0))",
+       "L:|",
+       "norm(A0)",
+       "L:|",
+       "len(norm(A1))",
+       "L:|",
+       "norm(A1)"
+      ]
+     }
+    },
+    {
+     "wallet": "A",
+     "method": "retire",
+     "args": [
+      "$P5"
+     ]
+    }
+   ],
+   "expect": "P5 RETIRED, bond back in credits: A credits 10000000000000000 (2 transactions)"
+  },
+  {
+   "n": 12,
+   "calls": [
+    {
+     "wallet": "A",
+     "method": "withdraw",
+     "args": []
+    },
+    {
+     "wallet": "B",
+     "method": "withdraw",
+     "args": []
+    }
+   ],
+   "expect": "0.01 GEN reaches wallet A and 0.008 GEN wallet B; both credits 0 (2 transactions)"
+  },
+  {
+   "n": 13,
+   "kind": "view",
+   "method": "get_piece",
+   "args": [
+    "$P1"
+   ],
+   "expect": "read: P1 RULED_OVERCLAIMS, challenger B, outcome OVERCLAIMS, held_wei 0"
+  }
+ ],
+ "caps": [
+  {
+   "label": "a 90-character headline (the cap) and a summary at the 240-character cap",
+   "method": "publish",
+   "args": [
+    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "x*240"
+   ]
+  }
+ ]
+}

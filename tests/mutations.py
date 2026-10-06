@@ -1,0 +1,73 @@
+# Deliberate faults for tools/mutate.py: (name, exact snippet in the contract, replacement).
+# Each must be caught by at least one test.
+MUTATIONS = [
+    ("OVERCLAIMS credits the author instead of the challenger",
+     "            self._credit(caller, 2 * bond)\n", "            self._credit(author, 2 * bond)\n"),
+    ("WITHIN credits the challenger instead of the author",
+     "            self._credit(author, 2 * bond)\n", "            self._credit(caller, 2 * bond)\n"),
+    ("VOID refunds only the author",
+     "            self._credit(caller, bond)\n", ""),
+    ("OVERCLAIMS does not close the piece",
+     "            record.state = S_OVER\n", "            record.state = S_OPEN\n"),
+    ("fail-safe flipped on unparseable output",
+     "                    return {\"outcome\": VOID}\n            if not isinstance(data, dict):",
+     "                    return {\"outcome\": OVERCLAIMS}\n            if not isinstance(data, dict):"),
+    ("unknown label maps to WITHIN",
+     "            return {\"outcome\": VOID}\n\n        def validator_fn",
+     "            return {\"outcome\": WITHIN}\n\n        def validator_fn"),
+    ("validator accepts any valid label",
+     "                return str(mine.get(\"outcome\", \"\")).strip().upper() == leader_outcome",
+     "                return True"),
+    ("validator refuses a VOID leader even when it also gets VOID",
+     "if leader_outcome not in (OVERCLAIMS, WITHIN, VOID):", "if leader_outcome not in (OVERCLAIMS, WITHIN):"),
+    ("the author may challenge their own piece",
+     "        if caller == author:\n", "        if False:\n"),
+    ("a larger challenge bond is accepted",
+     "        if int(gl.message.value) != bond:", "        if int(gl.message.value) < bond:"),
+    ("the model is called before the bond check",
+     "        bond = int(record.bond_wei)\n        if int(gl.message.value) != bond:\n"
+     "            raise gl.vm.UserError(\"The challenge bond must equal the author's bond\")\n\n"
+     "        outcome = self._judge(record.summary, record.headline)\n",
+     "        bond = int(record.bond_wei)\n        outcome = self._judge(record.summary, record.headline)\n"
+     "        if int(gl.message.value) != bond:\n"
+     "            raise gl.vm.UserError(\"The challenge bond must equal the author's bond\")\n\n"),
+    ("headline and summary swapped in the prompt",
+     "        outcome = self._judge(record.summary, record.headline)",
+     "        outcome = self._judge(record.headline, record.summary)"),
+    ("anyone may retire",
+     "        if caller != str(record.author).lower():", "        if caller == \"\":"),
+    ("retire does not return the bond",
+     "        self._credit(caller, int(record.bond_wei))\n", ""),
+    ("withdraw does not zero the credit",
+     "        self.credits[caller] = u256(0)\n", ""),
+    ("bond minimum off by one",
+     "if bond < MIN_BOND_WEI or", "if bond <= MIN_BOND_WEI or"),
+    ("bond maximum off by one",
+     "or bond > MAX_BOND_WEI:", "or bond >= MAX_BOND_WEI:"),
+    ("headline cap off by one",
+     "if len(clean_headline) > MAX_HEADLINE_LENGTH:", "if len(clean_headline) >= MAX_HEADLINE_LENGTH:"),
+    ("summary cap off by one",
+     "if len(clean_summary) > MAX_SUMMARY_LENGTH:", "if len(clean_summary) >= MAX_SUMMARY_LENGTH:"),
+    ("duplicate piece guard removed",
+     "        if pid in self.pieces:\n", "        if False:\n"),
+    ("id ignores whitespace normalization",
+     "        pid = self._piece_id(str(sender).lower(), self._normalize_text(clean_headline),\n"
+     "                             self._normalize_text(clean_summary))",
+     "        pid = self._piece_id(str(sender).lower(), clean_headline, clean_summary)"),
+    ("reserved token not checked on the summary",
+     "if self._contains_reserved_token(clean_headline) or self._contains_reserved_token(clean_summary):",
+     "if self._contains_reserved_token(clean_headline):"),
+    ("fence strip: no gap and a single pass (cross-token rebuild survives)",
+     "            cleaned = cleaned[:index] + \" \" + cleaned[index + len(token):]\n\n    def _fence_strip(self, value: str) -> str:\n        # Fixed point: repeat until nothing changes, so nested fragments\n        # such as \"<<TAG>TAG>\" cannot rebuild a marker after one pass.\n        cleaned = value\n        while True:\n            before = cleaned\n            for token in RESERVED_TOKENS:\n                cleaned = self._remove_token(cleaned, token)\n            if cleaned == before:\n                return \" \".join(cleaned.split())",
+     "            cleaned = cleaned[:index] + cleaned[index + len(token):]\n\n    def _fence_strip(self, value: str) -> str:\n        cleaned = value\n        for token in RESERVED_TOKENS:\n            cleaned = self._remove_token(cleaned, token)\n        return \" \".join(cleaned.split())"),
+    ("wallet leaks into the prompt",
+     "        safe_headline = self._fence_strip(headline)",
+     "        safe_headline = self._fence_strip(headline) + \" \" + str(gl.message.sender_address)"),
+    ("state checked after caller in challenge",
+     "        if record.state != S_OPEN:\n            raise gl.vm.UserError(\"This piece is no longer open to challenge\")\n"
+     "        caller = str(gl.message.sender_address).lower()\n        author = str(record.author).lower()\n"
+     "        if caller == author:\n            raise gl.vm.UserError(\"The author cannot challenge their own piece\")\n",
+     "        caller = str(gl.message.sender_address).lower()\n        author = str(record.author).lower()\n"
+     "        if caller == author:\n            raise gl.vm.UserError(\"The author cannot challenge their own piece\")\n"
+     "        if record.state != S_OPEN:\n            raise gl.vm.UserError(\"This piece is no longer open to challenge\")\n"),
+]
