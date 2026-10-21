@@ -17,7 +17,9 @@
     ]
   },
   "include": [
-    "tests/js/**/*.ts",
+    "tests/js/gen.test.ts",
+    "tests/js/pytext.test.ts",
+    "tests/js/source.test.ts",
     "src/lib/pytext.ts",
     "src/lib/ids.ts",
     "src/lib/rules.ts",
