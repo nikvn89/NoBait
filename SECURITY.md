@@ -1,45 +1,27 @@
-# SECURITY
+# NoBait V2 boundaries
 
-## Money
+## Source and verdict integrity
 
-The contract holds GEN: bonds of open pieces and credits not yet withdrawn. GEN enters only through `publish` and
-`challenge` (payable) and leaves only through `withdraw`, which pays the caller alone and zeroes the credit before
-sending. `challenge` — the only method with a model call — writes credits and never sends GEN.
+Publication fetches the public HTTPS URL in a non-deterministic block. Each validator performs its own HTTP check/render and compares the full rendered text with the leader. The complete accepted snapshot is stored with a Keccak-256 UTF-8 hash and a commitment binding it to author, normalized headline and exact URL. Source text and cited evidence cannot be edited afterward. Challenge reviews the stored snapshot; it does not silently switch to the current live page.
 
-## Where the central rule lives
+A challenger supplies an integer passage pointer, not a free-form substitute article or an unverified quotation. A fabricated index is rejected before model evaluation. The model reads all source passages and the selected pointer. Every conclusive decision requires 1–3 valid source indexes; validators independently re-evaluate and agree on the canonical outcome and citation indexes. Unclear or unusable output gives VOID and each bond is returned as credits. A model service exception reverts the challenge instead of issuing an author-favouring default.
 
-Whether a headline overclaims is decided only by validators inside `challenge`. What follows is one deterministic table
-in the contract: OVERCLAIMS → both bonds to the challenger, WITHIN → both to the author, VOID → each side refunded. The
-app never decides the ruling and never screens text: it reads `state` and `outcome` back from `get_piece` (checked by
-`tests/js/rules.test.ts`).
+These guarantees bind the result to a source, not to reality. The publisher may be wrong or controlled by the author. The contract does not verify publisher identity, legal ownership, external facts or the authenticity of a report. Independently retrieving a source is not proof of its truth.
 
-## Fail-safe
+The snapshot is rendered readable text, including any navigation/advertisements; it is not a signed publisher archive or raw-HTML digest. HTTP check and rendering are separate requests. A 200 response alone does not establish article quality. Blocked, dynamic, paywalled, incomplete or unstable pages may be unusable. Nodes seeing different text must not agree to capture. Bounds reject large/many-passage sources without truncation.
 
-Unusable output becomes `VOID`: both bonds return to their owners and the piece is closed, so nobody can grind for a
-better reading. A model that itself answers "VOID" is treated as unusable output.
+## Model and incentives
 
-## Prompt fence
+All headline/source strings are untrusted data in a JSON payload, including embedded instructions. JSON framing is not a guarantee against prompt injection. A real model can still make mistakes; strict citation agreement may cause additional consensus failures. These properties require live evaluation.
 
-The summary and the headline sit inside `<UNTRUSTED_SUMMARY>` and `<UNTRUSTED_HEADLINE>` tags. The four tags and the
-three labels are refused in any letter case on input (even inside longer words) and stripped to a fixed point inside the
-prompt. The model sees no wallet, bond or state.
+One challenge per publication is final. Same-wallet self-challenge is blocked, but multiple wallets cannot be proven to represent different people; an author may self-deal through another wallet. Different headlines/URLs create new publications. No claim of Sybil resistance or elimination of semantic grinding is made.
 
-## Grinding and self-dealing
+## GEN
 
-One challenge per piece. The author cannot challenge their own piece from the same wallet; from a second wallet they can,
-at the risk of their own bond (see the README).
+Publish/challenge accept bonds; deterministic outcome handling allocates credits only. The author may retire an OPEN piece. Withdraw zeroes the caller's credit before emitting a native transfer. No admin can redirect credits. Credit clearance and transaction return do not alone prove native delivery; recipient/value, finalized linked transfer and balance evidence are needed.
 
 ## Frontend
 
-- No MetaMask Snap: the app switches the network with `wallet_switchEthereumChain` / `wallet_addEthereumChain`.
-- One same-origin RPC proxy (`/genlayer-rpc`, in `vite.config.ts` and `vercel.json`) for reads, receipts and writes.
-- A write is reported only after the leader receipt says SUCCESS **and** consensus has reached ACCEPTED, and only after
-  the reloaded state shows the change; otherwise "confirmation delayed" with a Check again button that re-reads state.
-- Every revert predictable from state disables the button with the contract's own sentence. A challenge always sends
-  exactly the piece's bond, read from the view. Amounts are bigint from view to wallet.
-- Contract text is rendered as React text; no raw HTML. The board of piece ids is kept in the URL and, when the browser
-  allows it, in local storage — nothing else is stored.
+No default legacy address. Writes require the 2.0.0 source/citation profile, the connected wallet and correct StudioNet chain. Reads use LATEST_FINAL. Source hashes, commitment and full paragraph derivation are checked before signing. Conclusive postconditions check both wallets' credits and source-derived citations. Raw finalized normal-return receipts are required; missing receipt data stays pending. Pending writes block repetition; manual Check again rechecks the receipt as well as state.
 
-## Remaining limits
-
-See "Honest limitation" in the README.
+Source text is rendered as React text, never raw HTML. URL syntax excludes obvious local/IP/credential targets but does not by itself prevent DNS rebinding or redirects; external web-service network restrictions remain important. No private key is read by the application.

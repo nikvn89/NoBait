@@ -223,3 +223,5 @@ textarea { resize: vertical; min-height: 84px; }
   .hero h1 { font-size: 1.6rem; }
   .topbar { padding: 10px 16px; }
 }
+
+.snapshot{margin-top:16px;max-height:520px;overflow:auto;border:1px solid #ddd;border-radius:12px;padding:14px}.source-passage{padding:12px 0;border-bottom:1px solid #eee}.source-passage p,blockquote p{white-space:pre-wrap;overflow-wrap:anywhere}.source-passage label{display:flex;align-items:center;gap:8px}.source-passage input{width:auto}blockquote{margin:16px 0;padding:12px;border-left:3px solid #7654d7;background:#f8f5ff}.fine.mono{overflow-wrap:anywhere}

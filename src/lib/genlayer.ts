@@ -1,5 +1,6 @@
 import { createClient } from "genlayer-js";
 import { studionet } from "genlayer-js/chains";
+import {TransactionHashVariant} from "genlayer-js/types";
 import {
   CONTRACT_ADDRESS,
   RECEIPT_POLL_MS,
@@ -10,8 +11,8 @@ import {
   WALLET_ADD_RPC,
 } from "./config";
 import { classifyTransaction, type ReceiptVerdict } from "./receipt";
-import { parseCredits, parseLimits, parsePiece, type Limits } from "./parse";
-import type { Credits, Piece } from "./types";
+import { parseCredits, parseLimits, parsePiece, parseSource, compatibleProfile, type Limits } from "./parse";
+import type { Credits, Piece, Source } from "./types";
 
 declare global {
   interface Window {
@@ -85,13 +86,15 @@ export async function ensureStudioNet(): Promise<void> {
 }
 
 async function view(functionName: string, args: unknown[]): Promise<string> {
-  const raw = await readClient().readContract({ address: requireAddress(), functionName, args });
+  const raw = await readClient().readContract({ address: requireAddress(), functionName, args, transactionHashVariant: TransactionHashVariant.LATEST_FINAL });
   return typeof raw === "string" ? raw : JSON.stringify(raw ?? "");
 }
 
 export async function getPiece(id: string): Promise<Piece | null> {
   return parsePiece(await view("get_piece", [id]));
 }
+
+export async function getSource(id:string):Promise<Source|null> {return parseSource(await view("get_source",[id]));}
 
 export async function getCredits(wallet: string): Promise<Credits | null> {
   return parseCredits(await view("get_credits", [wallet]));
@@ -103,6 +106,8 @@ export async function getLimits(): Promise<Limits | null> {
 
 /** value is in wei; publish and challenge are payable. */
 export async function sendWrite(account: string, functionName: string, args: unknown[], value: bigint = 0n): Promise<string> {
+  if(!compatibleProfile(await getLimits()))throw new Error("Configure a new HeadlineBound 2.0.0 deployment; legacy contracts cannot accept source-backed writes.");
+  const current=await connectedWallet();if(current!==account.toLowerCase())throw new Error("Wallet changed; reload and try again.");
   await ensureStudioNet();
   const client: any = createClient({
     chain: proxiedChain(),

@@ -1,78 +1,40 @@
-# TESTING
+# NoBait V2 verification
 
+Executed locally on 21 October 2026 against `contracts/HeadlineBound.py`, py-genlayer v0.2.16. **Fresh v2 deployment: verified finalized with normal return, matching source and finalized limits. Live source-capture/model judgments/native delivery: NOT RUN.** No old v1 result is counted as a v2 result.
+
+| Check | Executed result | Meaning |
+| --- | --- | --- |
+| SDK Direct Mode | 61 passed | Real SDK storage, contract methods, mocked HTTP/render/model responses |
+| Frontend tests | 18 passed | Hash/ID parity, source verification, citations, role gates, both credit deltas, finality, exact amounts |
+| Directed mutations | 12/12 detected | Source-fetch consensus, source hash, full context, citations, uncertainty, consensus evidence, payout allocation, withdrawal replay, challenger pointer and HTTP gate |
+| React DOM integration | 8 passed | Controlled API fixtures; source selection, exact pointer/value, cited results, failed reads, pending-write guard, profile gate and URL publication |
+| GenVM AST lint | 3 checks passed | Offline lint; not a distributed execution result |
+| TypeScript + Vite | Passed | Production compilation; profile guard intentionally starts unconfigured |
+
+Machine-readable selected results are in [tests/evidence/local-results.json](tests/evidence/local-results.json) and [tests/evidence/mutations.json](tests/evidence/mutations.json).
+
+## Important regression cases
+
+- Validators independently fetch the source; a validator seeing different content refuses source capture agreement.
+- Source body, URL, hash and publication commitment remain fixed after a later live page change. The challenge prompt receives the original whole snapshot, not the new page or a selected excerpt alone.
+- Invalid HTTPS hosts, HTTP errors, renderer errors, source bounds and fabricated passage indexes cannot publish or consume a challenge.
+- Conclusive labels without valid citations, out-of-range/boolean/duplicate indexes, extra keys, malformed JSON and `UNCLEAR` refund both bonds; uncertainty never defaults to `WITHIN`.
+- Validators must agree on both outcome and canonical citations. Agreeing on a label while selecting different supporting passages is insufficient.
+- Author/self-wallet challenge, incorrect bond, duplicate publication, repeated ruling/retirement and withdrawal replay are blocked. Immutable basis stays unchanged after withdrawal.
+- Conservation holds over bonds held, credits and recorded withdrawals. Native delivery is replaced by a recorder in Direct Mode and is not proven by that recorder.
+- Shared golden vectors compare real SDK Keccak/Unicode IDs and commitments with TypeScript. The browser verifies source text and passage segmentation before enabling a challenge.
+
+## Reproduce
+
+```bash
+npm ci
+npm run verify
+pip install -r requirements-test.txt
+python3 -m genvm_linter.cli lint contracts/HeadlineBound.py
+python3 -m pytest tests/contract/test_source_backed.py -q -p no:cacheprovider
+python3 tests/mutation_check.py
 ```
-COMPILE PASS ≠ RUNTIME PASS
-SUBMITTED ≠ ACCEPTED ≠ FINALIZED ≠ EXECUTION SUCCESS ≠ POSTCONDITION PASS
-```
 
-## Automated gates (run before release; CI runs them on every push)
+The suite mocks web and model outputs. Its labels are **assumed fixture results**; assertions prove plumbing, commitment checks, validator agreement rules and consequences. They do not measure real model accuracy, render reliability, publisher authenticity, distributed GenVM consensus, or prompt-injection resistance. Untrusted source instructions are retained as data in a test; that is not an adversarial LLM evaluation.
 
-| Gate | Command | Result |
-|---|---|---|
-| Kill-set + rubric gate | `python3 HEADLINEBOUND_KILLSET_CHECK.py contracts/HeadlineBound.py` | rc 0 — no word or word pair separates the classes; the rubric shares no content word with any case |
-| genvm-linter | `python3 -m genvm_linter.cli lint contracts/HeadlineBound.py` | pass |
-| Contract tests (Direct Mode: the real py-genlayer v0.2.16 SDK, model mocked) | `python3 -m pytest tests/contract -q -p no:cacheprovider` | 51 passed |
-| Mutation check | `python3 tools/mutate.py .` | 25/25 deliberate faults caught |
-| Frontend build | `npm run build` | rc 0 |
-| Frontend tests | `npm test` | 54 passed |
-| Source hash | `npm run verify:source` | `contracts/HeadlineBound.py` matches `SOURCE_SHA256.txt` |
-| Calldata table | `node tools/calldata-bytes.mjs` | every write ≤ 255 bytes (largest case 124) |
-| Calldata on the RPC | `node tools/probe-calldata.mjs <address>` | runs in CI against both addresses in `deployments.json` |
-
-The mocked model labels drive the deterministic code paths; they say nothing about what the real model returns. The
-on-chain runs do.
-
-### What the mutation check catches
-
-Each fault is applied to the contract alone and the suite must go red (`tests/mutations.py`): bonds credited to the wrong
-side for each ending, VOID not refunding, a piece challengeable twice, the bond check dropped or moved after the model
-call, the author allowed to challenge, retire not returning the bond or allowed for others, withdraw not zeroing before
-the transfer, the fail-safe flipped, an unknown label accepted, the validator accepting any label, every limit off by
-one, the reserved-token check dropped, a single-pass fence, the wallet leaking into the prompt, and the check order
-swapped.
-
-### Calldata
-
-Encoded exactly as genlayer-js 1.1.8 `writeContract` does. The case set measures up to 124 bytes. With a 90-character
-headline, the longest ASCII summary that fits is **134 characters**; a piece at the caps (90 + 240) measures 363 bytes
-and is refused by the RPC. The publish form shows a live byte meter and disables Publish above 255 bytes.
-
-## Frontend checks
-
-- **Revert sentences** (`tests/js/rules.test.ts`): the set in `src/lib/rules.ts` equals the 13 sentences in the source,
-  and for `publish`, `challenge`, `retire` and `withdraw` the UI reports the earliest failing check in the source's order.
-  The app always sends exactly the piece's bond with a challenge.
-- **Piece ids** (`tests/js/ids.test.ts`, `tests/js/ids-html.test.ts`): viem Keccak-256 and Python whitespace rules; equal
-  to vectors produced by the contract on the real SDK and to the pieces of the on-chain run.
-- **Postconditions** (`tests/js/verify.test.ts`): a challenge is reported only when the reloaded piece names this wallet
-  as challenger, holds no bond, and this wallet's credits moved by exactly what the ending says (+2 bonds, 0, or +1 bond).
-- **Receipts** (`tests/js/receipt.test.ts`): a leader SUCCESS while validators are still proposing, committing or
-  revealing is pending, not success.
-- **Interface check** (Playwright against `vite preview`, the RPC mocked by decoding calldata): overview, a board with two
-  open pieces as challenger and as author, the same board after OVERCLAIMS and WITHIN, credits, publish with a duplicate
-  and with a reserved word, verification, and 390 px — no page error, no horizontal scroll.
-
-## On-chain runs
-
-See `RUNTIME_EVIDENCE.md`: the Project run through this app (11 transactions) and the Intelligent Contract run
-(18 transactions, every must-verify row PASS), one hash per row.
-
-Project run through the app: over one summary, "…by a third" was ruled **OVERCLAIMS** (both bonds to the challenger) and
-"…in mice" **WITHIN** (both to the author); the author's Challenge button was disabled with the contract's sentence; a
-third piece was ruled WITHIN; both wallets withdrew and their credits read 0. Every result was reported by the app only
-after it re-read the accepted state: **PASS**.
-
-## Consensus behaviour
-
-The model is called once per challenge. Validators re-run the reading and must agree on the exact label; a disagreement
-rotates the leader or ends the transaction without a ruling. In the Intelligent Contract run, one challenge (W4) needed a
-leader rotation before validators agreed on WITHIN. `publish`, `retire` and `withdraw` are deterministic.
-
-## What this run does NOT prove
-
-- Each case is sent once; label stability across repeated runs or validator sets is not measured.
-- O2, O3, O5, W2, W3 and W5 are tested offline only.
-- The `VOID` path (unusable model output) is proven offline only.
-- Pieces longer than the calldata limit (about 224 characters combined) are not sent.
-- Direct Mode does not record native transfers; real transfers are proven only on StudioNet.
-- Prompt-injection resistance rests on the fence and the reserved-token check; no adversarial model run is done.
+Remote schema compilation was not performed. SDK import/storage tests and offline lint were completed. The actual Studio deployment has now been verified (tests/evidence/deployment.json); the small signed path in RUNTIME_EVIDENCE.md remains necessary. The private DOM harness used jsdom with controlled API fixtures; it has no layout engine and is not included in this minimal public bundle. No real-browser layout or wallet-signing PASS is claimed.

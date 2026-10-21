@@ -1,6 +1,7 @@
 // Byte size of the GenLayer calldata exactly as genlayer-js 1.1.8 builds it
 // in writeContract: serialize([encode(makeCalldataObject(method, args)), leaderOnly]).
-// Above 255 bytes the RPC answers "RLP string ends with N superfluous bytes".
+// Conservative 255-byte UI budget retained from the prior StudioNet deployment.
+// This is a compatibility guard, not a universal/current network maximum.
 
 import { abi } from "genlayer-js";
 

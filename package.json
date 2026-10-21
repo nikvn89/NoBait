@@ -1,17 +1,17 @@
 {
   "name": "nobait",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "node tools/verify-source.mjs && tsc -b && vite build",
     "preview": "vite preview",
-    "test": "node --experimental-strip-types --no-warnings --test tests/js/*.test.ts",
-    "test:contract": "python3 -m pytest tests/contract -q -p no:cacheprovider",
+    "test": "node --experimental-strip-types --no-warnings --test tests/js/gen.test.ts tests/js/pytext.test.ts tests/js/source.test.ts",
+    "test:contract": "python3 -m pytest tests/contract/test_source_backed.py -q -p no:cacheprovider",
     "verify:source": "node tools/verify-source.mjs",
-    "calldata": "node tools/calldata-bytes.mjs",
-    "probe:calldata": "node tools/probe-calldata.mjs"
+    "verify": "npm test && npm run build",
+    "test:mutations": "python3 tests/mutation_check.py"
   },
   "dependencies": {
     "genlayer-js": "1.1.8",

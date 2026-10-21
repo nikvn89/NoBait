@@ -1,18 +1,8 @@
-// Compares the SHA-256 of contracts/HeadlineBound.py with SOURCE_SHA256.txt.
-// CRLF is normalized to LF first (Studio stores source with CRLF), and one
-// missing or extra trailing newline is tolerated.
-import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
-
-const FILE = "contracts/HeadlineBound.py";
-const expected = readFileSync("SOURCE_SHA256.txt", "utf8").trim().split(/\s+/)[0].toLowerCase();
-const lf = readFileSync(FILE, "utf8").replace(/\r\n/g, "\n");
-const variants = new Set([lf, lf.endsWith("\n") ? lf.slice(0, -1) : lf + "\n"]);
-const sha = (s) => createHash("sha256").update(s, "utf8").digest("hex");
-const hashes = [...variants].map(sha);
-if (hashes.includes(expected)) {
-  console.log(`PASS ${FILE} sha256 ${expected}`);
-  process.exit(0);
-}
-console.error(`FAIL ${FILE}\n  expected ${expected}\n  got      ${hashes.join(" / ")}`);
-process.exit(1);
+import {readFileSync} from 'node:fs';import {createHash} from 'node:crypto';
+const root=new URL('../',import.meta.url),release=JSON.parse(readFileSync(new URL('release.json',root),'utf8'));
+const bytes=readFileSync(new URL(release.contract_file,root),'utf8').replaceAll('\r\n','\n');
+const digest=createHash('sha256').update(bytes).digest('hex');
+if(digest!==release.source_sha256)throw Error('Contract source differs from the frozen v2 fingerprint');
+if(!readFileSync(new URL('SOURCE_SHA256.txt',root),'utf8').startsWith(digest))throw Error('SOURCE_SHA256.txt differs');
+if(!readFileSync(new URL('src/lib/config.ts',root),'utf8').includes(digest))throw Error('UI source fingerprint differs');
+console.log('Source parity PASS: '+digest);

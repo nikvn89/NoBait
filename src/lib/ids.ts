@@ -1,27 +1,14 @@
-import { keccak256, stringToBytes } from "viem";
-import { pyLen, pyNormalize, pyStrip } from "./pytext.ts";
-
-// Keccak-256 (Ethereum), not NIST SHA3-256. Same payload as the contract:
-// keccak256("HEADLINE_BOUND:PIECE:V1|" + author_lower + "|" + len(h) + "|" + h + "|" + len(s) + "|" + s),
-// with headline and summary stripped and their whitespace collapsed exactly like Python.
-export function pieceId(authorWallet: string, headline: string, summary: string): string {
-  const h = pyNormalize(pyStrip(headline));
-  const s = pyNormalize(pyStrip(summary));
-  const payload = "HEADLINE_BOUND:PIECE:V1|" + authorWallet.toLowerCase() + "|" + String(pyLen(h)) + "|" + h + "|" + String(pyLen(s)) + "|" + s;
-  return keccak256(stringToBytes(payload)).slice(2);
+import {keccak256,stringToBytes} from "viem";
+import {pyLen,pyNormalize,pyStrip} from "./pytext.ts";
+export function pieceId(author:string,headline:string,url:string):string {
+ const h=pyNormalize(headline),u=pyStrip(url);
+ return keccak256(stringToBytes("NOB_SOURCE:PIECE:V2|"+author.toLowerCase()+"|"+pyLen(h)+"|"+h+"|"+pyLen(u)+"|"+u)).slice(2);
 }
-
-/** Every 64-hex id found in a bare id, a 0x id, a link or a comma list. */
-export function idsFromInput(value: string): string[] {
-  const out: string[] = [];
-  for (const m of value.matchAll(/(?<![0-9a-fA-F])([0-9a-fA-F]{64})(?![0-9a-fA-F])/g)) {
-    const id = m[1].toLowerCase();
-    if (!out.includes(id)) out.push(id);
-  }
-  return out;
+export function sourceHash(text:string):string {return keccak256(stringToBytes(text)).slice(2);}
+export function verdictCommitment(id:string,hash:string):string {
+ return keccak256(stringToBytes("NOB_SOURCE:VERDICT:V2|"+id+"|"+hash)).slice(2);
 }
-
-export function short(value: string, head = 6, tail = 4): string {
-  if (!value || value.length <= head + tail + 1) return value;
-  return `${value.slice(0, head)}…${value.slice(-tail)}`;
+export function idsFromInput(value:string):string[] {
+ return [...new Set(Array.from(value.matchAll(/(?<![0-9a-fA-F])([0-9a-fA-F]{64})(?![0-9a-fA-F])/g),m=>m[1].toLowerCase()))];
 }
+export function short(v:string,head=6,tail=4):string {return !v||v.length<=head+tail+1?v:`${v.slice(0,head)}…${v.slice(-tail)}`;}

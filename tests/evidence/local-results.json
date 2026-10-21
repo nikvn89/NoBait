@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-21",
+  "contract_version": "2.0.0",
+  "source_sha256": "666c2bc87bc7cd208720c14c7c5d6eece44c1b9d8c4e4427551399d01dd9b1c4",
+  "sdk_direct": {
+    "passed": 61,
+    "failed": 0,
+    "sdk": "v0.2.16",
+    "web_and_model": "MOCKED",
+    "native_transfer": "RECORDER_ONLY"
+  },
+  "frontend_node": {
+    "passed": 18,
+    "failed": 0
+  },
+  "react_dom": {
+    "kind": "REACT_DOM_WITH_CONTROLLED_API_FIXTURES",
+    "passed": 8,
+    "checks": [
+      "challenge requires selected evidence",
+      "complete snapshot shown and selection enables challenge",
+      "exact evidence pointer, equal bond and cited result",
+      "failed source read blocks signing",
+      "pending write retains evidence and blocks repeat",
+      "legacy deployment cannot receive source-backed writes",
+      "URL publication replaces author summary and verifies committed source",
+      "no jsdom execution errors"
+    ],
+    "limitations": "jsdom has no layout engine. No real browser wallet, distributed web/model consensus or native payout is claimed."
+  },
+  "mutation": {
+    "killed": 12,
+    "total": 12,
+    "evidence": "mutations.json"
+  },
+  "genvm_ast_lint": {
+    "passed": 3
+  },
+  "production_build": "PASS",
+  "distributed_runtime": "NOT_RUN",
+  "native_payout_runtime": "NOT_RUN",
+  "remote_schema": "NOT_RUN",
+  "real_browser_layout": "NOT_VERIFIED",
+  "limitations": "Local fixture results are not real model accuracy, independent distributed web consensus or native payout evidence. V1 runtime is historical only."
+}

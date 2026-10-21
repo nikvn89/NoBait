@@ -1,0 +1,29 @@
+[
+  {
+    "author": "0x636485868971eac5aca33c4a0e1800a8a11d980b",
+    "headline": "  Study\t concerns mice  ",
+    "url": "https://example.org/research",
+    "text": "Research bulletin: a mouse study\nIn a study of 40 mice, compound X reduced tumour growth by one third.\nThe researchers have not conducted trials in humans. Human efficacy is unknown.",
+    "id": "8e715daf109f092274bbb7811ab7071eaa598cd2df3f40f71fabbf0b2e218c2b",
+    "source_hash": "5360b2529146b93301486c66d940cbb71dd8bcede9f5f0a6f72cfef3a7508fcf",
+    "commitment": "1cf0b860fe5526d6163a8c70086360b3cb6ee605677e49a105f237893a780dbc"
+  },
+  {
+    "author": "0x636485868971eac5aca33c4a0e1800a8a11d980b",
+    "headline": "Évidence 📰",
+    "url": "https://example.org/research/Path?A=1",
+    "text": "Research bulletin: a mouse study\nIn a study of 40 mice, compound X reduced tumour growth by one third.\nThe researchers have not conducted trials in humans. Human efficacy is unknown.\nUnicode: café 🐁",
+    "id": "ca7aa0ff0a36cd209704cbe3417daba1502a844889cc02ee568b31b6cd808c56",
+    "source_hash": "4f78b4144be8a81424b4dcf8842feeb5b39ec4f17d3f3938f60f7d654bf4b9bb",
+    "commitment": "66774352cf6b658ee24c2666b98dd00897b18376178ff6848ec19e4c3c2c36a2"
+  },
+  {
+    "author": "0x636485868971eac5aca33c4a0e1800a8a11d980b",
+    "headline": "Boundary\u001cspace",
+    "url": "https://example.org/research?x=%20",
+    "text": "Research bulletin: a mouse study\nIn a study of 40 mice, compound X reduced tumour growth by one third.\nThe researchers have not conducted trials in humans. Human efficacy is unknown.",
+    "id": "27eb85a61918f0d597f3739e0ac9c575bab0014bbae46beb79b23d4a3c80692c",
+    "source_hash": "5360b2529146b93301486c66d940cbb71dd8bcede9f5f0a6f72cfef3a7508fcf",
+    "commitment": "3d6fdb922600f15bd6f24739c9cd7875b9a66c4a0b65c783ea36d94190e6536f"
+  }
+]

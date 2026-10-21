@@ -1,0 +1,91 @@
+{
+  "baseline_cases": 61,
+  "killed": 12,
+  "total": 12,
+  "results": [
+    {
+      "mutation": "source_validator_blind",
+      "killed": true,
+      "collected": 61,
+      "failures": 2,
+      "errors": 0
+    },
+    {
+      "mutation": "source_hash_constant",
+      "killed": true,
+      "collected": 61,
+      "failures": 2,
+      "errors": 0
+    },
+    {
+      "mutation": "only_selected_context",
+      "killed": true,
+      "collected": 61,
+      "failures": 3,
+      "errors": 0
+    },
+    {
+      "mutation": "missing_basis_is_conclusive",
+      "killed": true,
+      "collected": 61,
+      "failures": 1,
+      "errors": 0
+    },
+    {
+      "mutation": "unclear_favors_author",
+      "killed": true,
+      "collected": 61,
+      "failures": 1,
+      "errors": 0
+    },
+    {
+      "mutation": "validator_label_only",
+      "killed": true,
+      "collected": 61,
+      "failures": 1,
+      "errors": 0
+    },
+    {
+      "mutation": "overclaim_wrong_payee",
+      "killed": true,
+      "collected": 61,
+      "failures": 3,
+      "errors": 0
+    },
+    {
+      "mutation": "within_wrong_amount",
+      "killed": true,
+      "collected": 61,
+      "failures": 2,
+      "errors": 0
+    },
+    {
+      "mutation": "void_does_not_refund_challenger",
+      "killed": true,
+      "collected": 61,
+      "failures": 17,
+      "errors": 0
+    },
+    {
+      "mutation": "withdraw_replay",
+      "killed": true,
+      "collected": 61,
+      "failures": 5,
+      "errors": 0
+    },
+    {
+      "mutation": "wrong_selected_quote",
+      "killed": true,
+      "collected": 61,
+      "failures": 1,
+      "errors": 0
+    },
+    {
+      "mutation": "missing_http_gate",
+      "killed": true,
+      "collected": 61,
+      "failures": 4,
+      "errors": 0
+    }
+  ]
+}

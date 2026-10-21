@@ -1,8 +1,6 @@
-// The Project's own deployment of the frozen HeadlineBound source (a separate
-// address from the Intelligent Contract submission). VITE_CONTRACT_ADDRESS
-// overrides it, e.g. for a fork.
-export const PROJECT_DEPLOYMENT = "0xAa76b8A17086938eF9474150f272bfEaC76d216F";
-export const CONTRACT_ADDRESS = (String(import.meta.env.VITE_CONTRACT_ADDRESS ?? "").trim() || PROJECT_DEPLOYMENT) as `0x${string}` | "";
+// Verified Project V2 deployment; a Vercel environment value may override it.
+export const PROJECT_DEPLOYMENT = "0xB4f042B07E140F990DE7e5c6fecdd6bB46cF9816";
+export const CONTRACT_ADDRESS = String(import.meta.env.VITE_CONTRACT_ADDRESS ?? PROJECT_DEPLOYMENT).trim();
 
 // Same-origin proxy declared in BOTH vite.config.ts and vercel.json.
 // Every read, every receipt poll and the write client use this one URL.
@@ -14,7 +12,7 @@ export const STUDIONET_CHAIN_HEX = "0xf22f";
 export const WALLET_ADD_RPC = "https://studio.genlayer.com/api";
 export const EXPLORER_BASE = "https://explorer-studio.genlayer.com";
 
-export const SOURCE_SHA256 = "e21aa2fe1e5cf42f2e4c68ae904235578a5491781ce30389dbecb373077e21f9";
+export const SOURCE_SHA256 = "666c2bc87bc7cd208720c14c7c5d6eece44c1b9d8c4e4427551399d01dd9b1c4";
 
 export const RECEIPT_TIMEOUT_MS = 150_000;
 export const RECEIPT_POLL_MS = 3_000;

@@ -1,0 +1,42 @@
+{
+  "checked_at": "2026-10-21T15:28:32.555Z",
+  "address": "0xB4f042B07E140F990DE7e5c6fecdd6bB46cF9816",
+  "source_sha256": "666c2bc87bc7cd208720c14c7c5d6eece44c1b9d8c4e4427551399d01dd9b1c4",
+  "limits": {
+    "contract_name": "HeadlineBound",
+    "version": "2.0.0",
+    "source_snapshot_required": true,
+    "challenger_passages": true,
+    "verdict_citations": true,
+    "external_web_used": true,
+    "source_refetched_at_challenge": false,
+    "semantic_outcomes": [
+      "OVERCLAIMS",
+      "WITHIN",
+      "UNCLEAR"
+    ],
+    "fail_safe_outcome": "VOID",
+    "max_headline_length": 90,
+    "max_source_length": 12000,
+    "max_passages": 64,
+    "min_bond_wei": "1000000000000000",
+    "max_bond_wei": "1000000000000000000",
+    "global_admin": false,
+    "rubric_hash": "7322f6646772e2887a4d2bd1aa616085e9a28108d5cb9ccb8c44458b8d5301e1"
+  },
+  "transactions": [
+    {
+      "hash": "0xbe3fb8609a32b76aee70e2bd158586ddc2e48f2c4e69621bd5a8669aa8b42bdc",
+      "status": "FINALIZED",
+      "from_address": "0x6276095FAEA15108740445ff277fdA8c304657F4",
+      "to_address": "0xB4f042B07E140F990DE7e5c6fecdd6bB46cF9816",
+      "type": 1,
+      "created_at": "2026-10-21T15:24:50.289468+00:00",
+      "execution": "FINISHED_WITH_RETURN"
+    }
+  ],
+  "scope": "Read-only deployed source, finalized limits and deployment receipt; source capture, semantic consensus and native payouts not yet tested.",
+  "source_bytes_raw": 17017,
+  "source_bytes_normalized": 16646,
+  "normalization": "CRLF to LF only"
+}
